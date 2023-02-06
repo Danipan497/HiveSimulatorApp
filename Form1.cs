@@ -225,5 +225,21 @@ namespace HiveSimulator
         {
 
         }
+
+        BeeControl control = null;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (control == null)
+            {
+                control = new BeeControl() { Location = new Point(90, 240)};
+                Controls.Add(control);
+            } else
+            {
+                using (control)
+                {
+                    Controls.Remove(control);
+                }
+            }
+        }
     }
 }
