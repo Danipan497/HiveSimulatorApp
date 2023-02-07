@@ -103,6 +103,16 @@ namespace HiveSimulator.Properties {
         /// <summary>
         ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Field {
+            get {
+                object obj = ResourceManager.GetObject("Field", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Wyszukuje zlokalizowany zasób typu System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Flower {
             get {
                 object obj = ResourceManager.GetObject("Flower", resourceCulture);

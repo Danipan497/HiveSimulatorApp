@@ -12,9 +12,9 @@ namespace HiveSimulator
     {
         private const double NectarHarvestedPerNewFlower = 50.0;
         private const int FieldMinX = 15;
-        private const int FieldMinY = 177;
+        private const int FieldMinY = 600;
         private const int FieldMaxX = 690;
-        private const int FieldMaxY = 290;
+        private const int FieldMaxY = 800;
 
         public Hive Hive;
         public List<Bee> Bees;
