@@ -9,3 +9,5 @@ C:\Users\Daniel\Documents\GitHub\HiveSimulatorApp\obj\Debug\HiveSimulator.Proper
 C:\Users\Daniel\Documents\GitHub\HiveSimulatorApp\obj\Debug\HiveSimulator.csproj.CoreCompileInputs.cache
 C:\Users\Daniel\Documents\GitHub\HiveSimulatorApp\obj\Debug\HiveSimulator.exe
 C:\Users\Daniel\Documents\GitHub\HiveSimulatorApp\obj\Debug\HiveSimulator.pdb
+C:\Users\Daniel\Documents\GitHub\HiveSimulatorApp\obj\Debug\HiveSimulator.HiveForm.resources
+C:\Users\Daniel\Documents\GitHub\HiveSimulatorApp\obj\Debug\HiveSimulator.FieldForm.resources

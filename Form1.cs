@@ -14,6 +14,10 @@ namespace HiveSimulator
 {
     public partial class Form1 : Form
     {
+        HiveForm hiveForm = new HiveForm();
+        FieldForm fieldForm= new FieldForm();
+        Renderer renderer;
+        
         private World world;
         private Random random = new Random();
         private DateTime start = DateTime.Now;
@@ -28,6 +32,11 @@ namespace HiveSimulator
             timer1.Tick += new EventHandler(RunFrame);
             timer1.Enabled = false;
             UpdateStats(new TimeSpan());
+
+            hiveForm.Show(this);
+            fieldForm.Show(this);
+            MoveChildForms();
+            ResetSimulator();
         }
 
         private void UpdateStats(TimeSpan frameDuration)
@@ -48,10 +57,17 @@ namespace HiveSimulator
                 FrameRate.Text = "brak";
         }
 
+        private void MoveChildForms()
+        {
+            hiveForm.Location = new Point(Location.X + Width + 10, Location.Y);
+            fieldForm.Location = new Point(Location.X, Location.Y + Math.Max(Height, hiveForm.Height) + 10);
+        }
+
         public void RunFrame(object sender, EventArgs e) 
         {
             framesRun++;
             world.Go(random);
+            renderer.Render();
             end = DateTime.Now;
             TimeSpan frameDuration = end - start;
             start = end;
@@ -75,8 +91,8 @@ namespace HiveSimulator
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            framesRun = 0;
-            world = new World(new Bee.BeeMessage(SendMessage));
+            renderer.Reset();
+            ResetSimulator();
             if (!timer1.Enabled)
             {
                 toolStrip1.Items[0].Text = "Rozpocznij symulację";
@@ -240,6 +256,23 @@ namespace HiveSimulator
                     Controls.Remove(control);
                 }
             }
+        }
+
+        private void button1_Move(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Move(object sender, EventArgs e)
+        {
+            MoveChildForms();
+        }
+
+        private void ResetSimulator()
+        {
+            framesRun = 0;
+            world = new World(new Bee.BeeMessage(SendMessage));
+            renderer = new Renderer(world, hiveForm, fieldForm);
         }
     }
 }
