@@ -34,7 +34,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::HiveSimulator.Properties.Resources.Hive__inside_;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(835, 867);
             this.ControlBox = false;
@@ -43,6 +42,7 @@
             this.Name = "HiveForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form2";
+            this.Load += new System.EventHandler(this.HiveForm_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.HiveForm_MouseClick);
             this.ResumeLayout(false);
 

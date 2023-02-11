@@ -37,6 +37,7 @@ namespace HiveSimulator
             fieldForm.Show(this);
             MoveChildForms();
             ResetSimulator();
+
         }
 
         private void UpdateStats(TimeSpan frameDuration)
@@ -274,5 +275,6 @@ namespace HiveSimulator
             world = new World(new Bee.BeeMessage(SendMessage));
             renderer = new Renderer(world, hiveForm, fieldForm);
         }
+
     }
 }

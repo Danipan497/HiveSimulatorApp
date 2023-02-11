@@ -15,11 +15,19 @@ namespace HiveSimulator
         public HiveForm()
         {
             InitializeComponent();
+            BackgroundImage = Renderer.ResizeImage(
+                Properties.Resources.Hive__inside_,
+                ClientRectangle.Width, ClientRectangle.Height );
         }
 
         private void HiveForm_MouseClick(object sender, MouseEventArgs e)
         {
             MessageBox.Show(e.Location.ToString());
+        }
+
+        private void HiveForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
