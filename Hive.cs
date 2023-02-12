@@ -30,7 +30,7 @@ namespace HiveSimulator
         private void InitializeLocations()
         {
             locations = new Dictionary<string, Point>();
-            locations.Add("Wejście", new Point(1321, 297));
+            locations.Add("Wejście", new Point(614, 103));
             locations.Add("Żłobek", new Point(95, 174));
             locations.Add("Fabryka miodu", new Point(157, 98));
             locations.Add("Wyjście", new Point(411, 398));

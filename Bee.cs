@@ -63,10 +63,6 @@ namespace HiveSimulator
             }
             return false;
         }
-
-
-
-
         public void Go(Random random)
         {
             Age++;

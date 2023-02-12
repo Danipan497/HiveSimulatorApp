@@ -47,9 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bee.cs" />
-    <Compile Include="BeeControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="BeeMessage.cs" />
     <Compile Include="BeeState.cs" />
     <Compile Include="Flower.cs" />

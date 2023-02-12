@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Drawing.Printing;
 
 namespace HiveSimulator
 {
@@ -68,11 +69,12 @@ namespace HiveSimulator
         {
             framesRun++;
             world.Go(random);
-            renderer.Render();
             end = DateTime.Now;
             TimeSpan frameDuration = end - start;
             start = end;
             UpdateStats(frameDuration);
+            hiveForm.Invalidate();
+            fieldForm.Invalidate();
         }
 
 
@@ -92,7 +94,6 @@ namespace HiveSimulator
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            renderer.Reset();
             ResetSimulator();
             if (!timer1.Enabled)
             {
@@ -243,27 +244,6 @@ namespace HiveSimulator
 
         }
 
-        BeeControl control = null;
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (control == null)
-            {
-                control = new BeeControl() { Location = new Point(90, 240)};
-                Controls.Add(control);
-            } else
-            {
-                using (control)
-                {
-                    Controls.Remove(control);
-                }
-            }
-        }
-
-        private void button1_Move(object sender, EventArgs e)
-        {
-
-        }
-
         private void Form1_Move(object sender, EventArgs e)
         {
             MoveChildForms();
@@ -276,5 +256,100 @@ namespace HiveSimulator
             renderer = new Renderer(world, hiveForm, fieldForm);
         }
 
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            renderer.AnimateBees();
+        }
+
+        private void document_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            Size stringSize;
+            using (Font arial24bold = new Font("Arial", 24, FontStyle.Bold))
+            {
+                stringSize = Size.Ceiling(g.MeasureString("Symulator ula", arial24bold));
+                g.FillEllipse(Brushes.Gray, new Rectangle(e.MarginBounds.X + 2, e.MarginBounds.Y + 2, stringSize.Width + 30, stringSize.Height + 30));
+                g.FillEllipse(Brushes.Black, new Rectangle(e.MarginBounds.X, e.MarginBounds.Y, stringSize.Width + 30, stringSize.Height + 30));
+                g.DrawString("Symulator ula", arial24bold, Brushes.Gray, e.MarginBounds.X + 17, e.MarginBounds.Y + 17);
+                g.DrawString("Symulator ula", arial24bold, Brushes.White, e.MarginBounds.X + 15, e.MarginBounds.Y + 15);
+            }
+
+            int tableX = e.MarginBounds.X + (int)stringSize.Width + 50;
+            int tableWidth = e.MarginBounds.X + e.MarginBounds.Width - tableX - 20;
+            int firstColumnX = tableX + 2;
+            int secondColumnX = tableX + (tableWidth / 2) + 55;
+            int tableY = e.MarginBounds.Y;
+
+            tableY = PrintTableRow(g, tableX, tableWidth, firstColumnX, secondColumnX, tableY, "Ilość pszczół", Bees.Text);
+            tableY = PrintTableRow(g, tableX, tableWidth, firstColumnX, secondColumnX, tableY, "Ilość kwiatów", Flowers.Text);
+            tableY = PrintTableRow(g, tableX, tableWidth, firstColumnX, secondColumnX, tableY, "Ilość miodu w ulu", HoneyInHive.Text);
+            tableY = PrintTableRow(g, tableX, tableWidth, firstColumnX, secondColumnX, tableY, "Ilość nektaru na polu", NectarInFlowers.Text);
+            tableY = PrintTableRow(g, tableX, tableWidth, firstColumnX, secondColumnX, tableY, "Ilość wyświetlonych klatek", FramesRun.Text);
+            tableY = PrintTableRow(g, tableX, tableWidth, firstColumnX, secondColumnX, tableY, "Ilość klatek na sekundę", FrameRate.Text);
+
+            g.DrawRectangle(Pens.Black, tableX, e.MarginBounds.Y, tableWidth, tableY - e.MarginBounds.Y);
+            g.DrawLine(Pens.Black, secondColumnX, e.MarginBounds.Y, secondColumnX, tableY);
+
+            using (Pen blackPen = new Pen(Brushes.Black, 2)) 
+            using (Bitmap hiveBitmap = new Bitmap(hiveForm.ClientSize.Width, hiveForm.ClientSize.Height))
+            using (Bitmap fieldBitmap = new Bitmap(fieldForm.ClientSize.Width, fieldForm.ClientSize.Height))
+            {
+                using (Graphics hiveGraphics = Graphics.FromImage(hiveBitmap))
+                {
+                    renderer.PaintHive(hiveGraphics);
+                }
+
+                int hiveWidth = e.MarginBounds.Width / 2;
+                float ratio = (float)hiveBitmap.Height / (float)hiveBitmap.Width;
+                int hiveHeight = (int)(hiveWidth * ratio);
+                int hiveX = e.MarginBounds.X + (e.MarginBounds.Width - hiveWidth) / 2;
+                int hiveY = e.MarginBounds.Height / 3;
+                g.DrawImage(hiveBitmap, hiveX, hiveY, hiveWidth, hiveHeight);
+                g.DrawRectangle(blackPen, hiveX, hiveY, hiveWidth, hiveHeight);
+
+                using (Graphics fieldGraphics = Graphics.FromImage(fieldBitmap))
+                {
+                    renderer.PaintField(fieldGraphics);
+                }
+
+                int fieldWidth = e.MarginBounds.Width;
+                ratio = (float)fieldBitmap.Height / (float)(fieldBitmap.Width);
+                int fieldHeight = (int)(fieldWidth * ratio);
+                int fieldX = e.MarginBounds.X;
+                int fieldY = e.MarginBounds.Y + e.MarginBounds.Height - fieldHeight;
+                g.DrawImage(fieldBitmap, fieldX, fieldY, fieldWidth, fieldHeight);
+                g.DrawRectangle(blackPen, fieldX, fieldY, fieldWidth, fieldHeight);
+            } 
+        }
+
+        private int PrintTableRow(Graphics printGraphics, int tableX, int tableWidth, int firstColumnX, int secondColumnX, int tableY, string firstColumn, string secondColumn)
+        {
+            Font arial12 = new Font("Arial", 12);
+            Size stringSize = Size.Ceiling(printGraphics.MeasureString(firstColumn, arial12));
+            tableY += 2;
+            printGraphics.DrawString(firstColumn, arial12, Brushes.Black, firstColumnX, tableY);
+            printGraphics.DrawString(secondColumn, arial12, Brushes.Black, secondColumnX, tableY);
+            tableY += (int)stringSize.Height + 2;
+            printGraphics.DrawLine(Pens.Black, tableX, tableY, tableX + tableWidth, tableY);
+            arial12.Dispose();
+            return tableY;
+        }
+
+        private void printToolStripButton_Click(object sender, EventArgs e)
+        {
+            bool stoppedTimer = false;
+            if (timer1.Enabled)
+            {
+                timer1.Stop();
+                stoppedTimer = true;
+            }
+            PrintPreviewDialog preview = new PrintPreviewDialog();
+            PrintDocument document = new PrintDocument();
+            preview.Document = document;
+            document.PrintPage += new PrintPageEventHandler(document_PrintPage);
+            preview.ShowDialog(this);
+            if (stoppedTimer)
+                timer1.Start();
+        }
     }
 }

@@ -29,5 +29,11 @@ namespace HiveSimulator
         {
 
         }
+
+        public Renderer renderer;
+        private void HiveForm_Paint(object sender, PaintEventArgs e)
+        {
+            renderer.PaintHive(e.Graphics);
+        }
     }
 }

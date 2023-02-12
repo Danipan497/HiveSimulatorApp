@@ -15,7 +15,10 @@ namespace HiveSimulator
         public FieldForm()
         {
             InitializeComponent();
+            BackgroundImage = Renderer.ResizeImage(Properties.Resources.Hive__inside_,ClientRectangle.Width, ClientRectangle.Height);
         }
+
+        public Renderer renderer;
 
         private void FieldForm_MouseClick(object sender, MouseEventArgs e)
         {
@@ -25,6 +28,11 @@ namespace HiveSimulator
         private void FieldForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void FieldForm_Paint(object sender, PaintEventArgs e)
+        {
+            renderer.PaintField(e.Graphics);
         }
     }
 }
